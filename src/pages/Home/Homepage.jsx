@@ -12,7 +12,7 @@ const Homepage = () => {
       <div className="left">
         <h1>Gemini Clone</h1>
         <h2>Supercharge your creativity and productivity</h2>
-        <h3>Coded with ❤️ by Achyuth</h3>
+        <h3>Coded with ❤️ by Achyuth Varma</h3>
         <Link to="/dashboard">Get Started</Link>
       </div>
       <div className="right">
