@@ -1,6 +1,6 @@
 import React from "react";
 import { SignUp } from "@clerk/clerk-react";
-import "./signuppage.scss";
+// import "./signuppage.scss";
 
 const SignUpPage = () => {
   return (
