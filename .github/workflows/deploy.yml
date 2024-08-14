@@ -15,17 +15,20 @@ jobs:
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
-        with:
-          node-version: "20.x"
+        # with:
+        #   node-version: "20.x"
+
+      - name: Installing Yarn
+        run: npm install --global yarn
 
       - name: Install dependencies
-        run: npm install
+        run: yarn install
 
       - name: Build Vite app
         env:
           VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
           # VITE_CUSTOM_VARIABLE_2: ${{ secrets.CUSTOM_VARIABLE_2 }}
-        run: npm run build
+        run: yarn build
 
       - name: Upload to S3
         env:
