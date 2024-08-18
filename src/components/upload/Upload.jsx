@@ -5,10 +5,11 @@ import { IKContext, IKImage, IKUpload } from "imagekitio-react";
 
 const urlEndpoint = import.meta.env.VITE_IMAGE_KIT_ENDPOINT_URL;
 const publicKey = import.meta.env.VITE_IMAGE_KIT_PUBLIC_KEY;
+const backendAPIRoute = import.meta.env.VITE_BACKEND_API_URL;
 
 const authenticator = async () => {
   try {
-    const response = await fetch("http://localhost:3000/auth");
+    const response = await fetch(backendAPIRoute + "/auth");
 
     if (!response.ok) {
       const errorText = await response.text();
