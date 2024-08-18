@@ -28,6 +28,10 @@ jobs:
         env:
           VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
           # VITE_CUSTOM_VARIABLE_2: ${{ secrets.CUSTOM_VARIABLE_2 }}
+          VITE_IMAGE_KIT_ENDPOINT_URL: ${{ secrets.IMAGE_KIT_ENDPOINT_URL }}
+          VITE_IMAGE_KIT_PUBLIC_KEY: ${{ secrets.IMAGE_KIT_PUBLIC_KEY }}
+          VITE_GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY }}
+
         run: yarn build
 
       - name: Upload to S3
