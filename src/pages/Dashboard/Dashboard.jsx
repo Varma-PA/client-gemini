@@ -1,44 +1,39 @@
 import React from "react";
 import "./dashboard.scss";
 import axios from "axios";
-import { useAuth } from "@clerk/clerk-react";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
 
 const backendAPIRoute = import.meta.env.VITE_BACKEND_API_URL;
 
 const Dashboard = () => {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const navigate = useNavigate();
 
-  const mutation = useMutation({
-    mutationFn: (text) => {
-      // return fetch(`${backendAPIRoute}/chat`, {
-      //   method: "POST",
-      //   credentials: "include",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ text }),
-      // }).then((res) => {
-      //   console.log(res.json());
-      //   return res.json();
-      // });
+  const { getToken } = useAuth();
 
-      return axios
-        .post(
-          backendAPIRoute + "/chat",
-          {
-            text,
+  const mutation = useMutation({
+    mutationFn: async (text) => {
+      const response = await axios.post(
+        `${backendAPIRoute}/chat`,
+        { text },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
           },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((res) => {
-          return res.data;
-        });
+        }
+      );
+
+      const id = await response.data;
+
+      return id;
     },
     onSuccess: (id) => {
       // Invalidate and fetch
