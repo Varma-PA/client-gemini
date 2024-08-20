@@ -1,42 +1,62 @@
 import React, { useEffect, useRef } from "react";
 import "./chatpage.scss";
 import NewPrompt from "../../components/new_prompt/NewPrompt";
+import { useLocation } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { IKImage } from "imagekitio-react";
+
+const backendAPIRoute = import.meta.env.VITE_BACKEND_API_URL;
+
+const urlEndpoint = import.meta.env.VITE_IMAGE_KIT_ENDPOINT_URL;
+const publicKey = import.meta.env.VITE_IMAGE_KIT_PUBLIC_KEY;
 
 const ChatPage = () => {
+  const path = useLocation().pathname;
+  const chatId = path.split("/").pop();
+
+  const { isPending, error, data } = useQuery({
+    queryKey: ["chat", chatId],
+    queryFn: async () => {
+      const response = await axios.get(`${backendAPIRoute}/chat/${chatId}`, {
+        withCredentials: true,
+      });
+      const data = await response.data;
+      return data;
+    },
+  });
+
   return (
     <div className="chatPage">
       <div className="wrapper">
         <div className="chat">
-          <div className="message">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae
-            eius expedita voluptates accusamus dolorum illo quo, molestias ipsum
-            reiciendis natus totam architecto error dicta. Possimus eius minus
-            assumenda molestiae exercitationem!
-          </div>
-          <div className="message user">User 1</div>
-          <div className="message">AI</div>
-          <div className="message user">User 1</div>
-          <div className="message">AI</div>
-          <div className="message user">User 1</div>
-          <div className="message">AI</div>
-          <div className="message user">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Perspiciatis, possimus. A animi ea alias, illum voluptatibus nihil
-            quis ipsa sequi inventore ullam, consectetur, veritatis ducimus iste
-            at deserunt aut debitis! 1
-          </div>
-          <div className="message">AI</div>
-          <div className="message user">User 1</div>
-          <div className="message">AI</div>
-          <div className="message user">User 1</div>
-          <div className="message">AI</div>
-          <div className="message user">User 1</div>
-          <div className="message">AI</div>
-          <div className="message user">User 1</div>
-          <div className="message">AI</div>
-          <div className="message user">User 1</div>
-          <div className="message">AI</div>
-          <div className="message user">User 1</div>
+          {isPending
+            ? "Loading..."
+            : error
+            ? "Something went wrong..."
+            : data?.history?.map((message, i) => (
+                <>
+                  {message.img && (
+                    <IKImage
+                      urlEndpoint={urlEndpoint}
+                      path={message.img}
+                      height="300"
+                      width="400"
+                      transformation={[{ height: 300, width: 400 }]}
+                      loading="lazy"
+                      lqip={{ active: true, quality: 20 }}
+                    />
+                  )}
+                  <div
+                    key={i}
+                    className={
+                      message.role === "user" ? "message user" : "message"
+                    }
+                  >
+                    {message.parts[0].text}
+                  </div>
+                </>
+              ))}
           <NewPrompt />
         </div>
       </div>
