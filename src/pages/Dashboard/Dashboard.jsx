@@ -37,6 +37,7 @@ const Dashboard = () => {
     },
     onSuccess: (id) => {
       // Invalidate and fetch
+      console.log("Successfully mutating the dashboard");
       queryClient.invalidateQueries({ queryKey: ["userChats"] });
       navigate(`/dashboard/chat/${id}`);
     },
