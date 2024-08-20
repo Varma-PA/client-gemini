@@ -2,9 +2,26 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { TypeAnimation } from "react-type-animation";
 import "./homepage.scss";
+import axios from "axios";
+
+const backend = import.meta.env.VITE_BACKEND_API_URL;
 
 const Homepage = () => {
   const [typingStatus, setTypingStatus] = useState("human1");
+
+  const handleAuth = async (event) => {
+    event.preventDefault();
+
+    console.log("Inside Handle Auth");
+
+    const response = await axios.get(backend + "/chat/test", {
+      withCredentials: true,
+    });
+
+    const data = await response.data;
+
+    console.log(data);
+  };
 
   return (
     <div className="homePage">
@@ -14,6 +31,7 @@ const Homepage = () => {
         <h2>Supercharge your creativity and productivity</h2>
         <h3>Coded with ❤️ by Achyuth Varma</h3>
         <Link to="/dashboard">Get Started</Link>
+        <button onClick={handleAuth}>Test Authentication</button>
       </div>
       <div className="right">
         <div className="imgContainer">
