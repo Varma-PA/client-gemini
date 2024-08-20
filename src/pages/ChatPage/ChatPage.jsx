@@ -44,6 +44,7 @@ const ChatPage = () => {
                 <>
                   {message.img && (
                     <IKImage
+                      key={i}
                       urlEndpoint={urlEndpoint}
                       path={message.img}
                       height="300"
