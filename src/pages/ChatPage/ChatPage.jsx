@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { IKImage } from "imagekitio-react";
+import { useAuth } from "@clerk/clerk-react";
 
 const backendAPIRoute = import.meta.env.VITE_BACKEND_API_URL;
 
@@ -15,11 +16,16 @@ const ChatPage = () => {
   const path = useLocation().pathname;
   const chatId = path.split("/").pop();
 
+  const { getToken } = useAuth();
+
   const { isPending, error, data } = useQuery({
     queryKey: ["chat", chatId],
     queryFn: async () => {
       const response = await axios.get(`${backendAPIRoute}/chat/${chatId}`, {
         withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+        },
       });
       const data = await response.data;
       return data;

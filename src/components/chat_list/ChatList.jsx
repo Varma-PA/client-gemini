@@ -3,15 +3,21 @@ import { Link } from "react-router-dom";
 import "./chatlist.scss";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useAuth } from "@clerk/clerk-react";
 
 const backendAPIRoute = import.meta.env.VITE_BACKEND_API_URL;
 
 const ChatList = () => {
+  const { getToken } = useAuth();
+
   const { isPending, error, data } = useQuery({
     queryKey: ["userChats"],
     queryFn: async () => {
       const response = await axios.get(`${backendAPIRoute}/userchats`, {
         withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+        },
       });
       const data = await response.data;
       return data;
