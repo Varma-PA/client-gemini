@@ -2,10 +2,11 @@ import React, { useEffect, useRef } from "react";
 import "./chatpage.scss";
 import NewPrompt from "../../components/new_prompt/NewPrompt";
 import { useLocation } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useIsRestoring, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { IKImage } from "imagekitio-react";
 import { useAuth } from "@clerk/clerk-react";
+import Markdown from "react-markdown";
 
 const backendAPIRoute = import.meta.env.VITE_BACKEND_API_URL;
 
@@ -28,7 +29,20 @@ const ChatPage = () => {
         },
       });
       const data = await response.data;
+      console.log(data);
       return data;
+      // fetch(`${backendAPIRoute}/chat/${chatId}`, {
+      //   credentials: "include",
+      //   // headers: {
+      //   //   Authorization: `Bearer ${await getToken()}`,
+      //   // },
+      // }).then((res) => res.json());
+      // return axios.get(`${backendAPIRoute}/chat/${chatId}`, {
+      //   withCredentials: true,
+      //   headers: {
+      //     Authorization: `Bearer ${await getToken()}`,
+      //   },
+      // });
     },
   });
 
@@ -39,7 +53,7 @@ const ChatPage = () => {
           {isPending
             ? "Loading..."
             : error
-            ? "Something went wrong..."
+            ? "Something went wrong 2123123..." + error
             : data?.history?.map((message, i) => (
                 <>
                   {message.img && (
@@ -60,11 +74,12 @@ const ChatPage = () => {
                       message.role === "user" ? "message user" : "message"
                     }
                   >
-                    {message.parts[0].text}
+                    <Markdown>{message.parts[0].text}</Markdown>
                   </div>
                 </>
               ))}
-          <NewPrompt />
+          {data ? <NewPrompt data={data} /> : ""}
+          {/* {data ? (<NewPrompt data={data}) : "" />} */}
         </div>
       </div>
     </div>
